@@ -6,37 +6,35 @@ public class Ambiente {
 	private int altura, largura;
 	private Sala[][] ambiente;
 	private Aspirador agente;
-	private int posAgenteX, posAgenteY;
+	private int totalSujeiras;
 
 	public Ambiente(int largura, int altura) {
-		this.largura = altura;
-		this.altura = largura;
-		ambiente = new Sala[largura][altura];
-		for (int i = 0; i < largura; i++) {
-			for (int j = 0; j < altura; j++) {
-				if (isParede(largura, altura, i, j))
+		this.largura = altura + 2;
+		this.altura = largura + 2;
+		ambiente = new Sala[this.largura][this.altura];
+		for (int i = 0; i < this.largura; i++) {
+			for (int j = 0; j < this.altura; j++) {
+				if (isParede(this.largura, this.altura, i, j))
 					ambiente[i][j] = new Sala(EstadoDaSala.obstaculo);
 				else
 					ambiente[i][j] = new Sala();
 			}
 		}
 		agente = new Aspirador();
-		posAgenteX = 1;
-		posAgenteY = 1;
+	}
+
+	public Sala getSala(int x, int y) {
+		return ambiente[x][y];
 	}
 
 	private boolean isParede(int largura, int altura, int i, int j) {
 		return i == 0 || j == 0 || i == largura - 1 || j == altura - 1;
 	}
 
-	public Sala getSala(int i, int j) {
-		return ambiente[i][j];
-	}
-
 	public void mostrarAmbiente() {
-		for (int i = 0; i < altura; i++) {
-			for (int j = 0; j < largura; j++) {
-				if (i == posAgenteX && j == posAgenteY) {
+		for (int j = 0; j < altura; j++) {
+			for (int i = 0; i < largura; i++) {
+				if (i == agente.getPosicaoX() && j == agente.getPosicaoY()) {
 					System.out.print('@');
 				} else {
 					System.out.print(ambiente[i][j].getDscSala());
@@ -57,32 +55,36 @@ public class Ambiente {
 	}
 
 	private boolean isPosicaoValida(int x, int y) {
-		return (x >= 0 && x < altura) && (y >= 0 && y < largura)
+		return (x > 0 && x < largura) && (y > 0 && y < altura)
 				&& ambiente[x][y].estado != EstadoDaSala.obstaculo;
 	}
 
-	private void moverAgente() {
-		while (!isPosicaoValida(posAgenteX + agente.getVelX(), posAgenteY
-				+ agente.getVelY())) {
-			agente.perceberObstaculoSala(ambiente[posAgenteX][posAgenteY]);
+	public void executarAgente() {
+		if (agente.sensorSujeira.acionarSensor(getSalaAtual())) {
+		} else {
+			while (agente.sensorProximaSalaLivre
+					.acionarSensor(getProximaSala())) {
+			}
+			agente.atuadorMovimento();
 		}
-		posAgenteX += agente.getVelX();
-		posAgenteY += agente.getVelY();
 	}
 
-	public void executarAgente() {
-		agente.perceberSala(ambiente[posAgenteX][posAgenteY]);
-		moverAgente();
+	private Sala getProximaSala() {
+		return ambiente[agente.getProximaPosicaoX()][agente
+				.getProximaPosicaoY()];
+	}
+
+	private Sala getSalaAtual() {
+		return ambiente[agente.getPosicaoX()][agente.getPosicaoY()];
 	}
 
 	public void setPosicaoAgente(int x, int y) {
-		posAgenteX = x;
-		posAgenteY = y;
+		agente.setPosicao(x, y);
 	}
 
 	public boolean existeSujeira() {
-		for (int i = 0; i < altura; i++) {
-			for (int j = 0; j < largura; j++) {
+		for (int i = 0; i < largura; i++) {
+			for (int j = 0; j < altura; j++) {
 				if (ambiente[i][j].estado == EstadoDaSala.sujo) {
 					return true;
 				}
@@ -91,21 +93,45 @@ public class Ambiente {
 		return false;
 	}
 
-	public void mostrarPontuacao() {
-		System.out.println(agente.getPontuacao());
+	public void mostrarInformacoes() {
+		System.out.println("Sujeira: " + getSujeirasRestantes() + "/"
+				+ totalSujeiras + " Pontuacao: " + agente.getPontuacao());
+	}
+
+	private int getSujeirasRestantes() {
+		int sujeirasRestantes = 0;
+		for (int i = 1; i < largura - 1; i++) {
+			for (int j = 0; j < altura - 1; j++) {
+				if (ambiente[i][j].estado == EstadoDaSala.sujo) {
+					sujeirasRestantes += 1;
+				}
+			}
+		}
+		return sujeirasRestantes;
 	}
 
 	public void setPorcentagemDeSujeira(double d) {
-		int numeroDeSujeiras = (int) ((altura - 2) * (largura - 2) * d);
-		for (int i = 0; i < numeroDeSujeiras; i++) {
-			int x = (int) (Math.random() * altura - 1) + 1;
-			int y = (int) (Math.random() * largura - 1) + 1;
+		totalSujeiras = (int) (((altura - 2) * (largura - 2) - getTotalDeObstaculos()) * d);
+		for (int i = 0; i < totalSujeiras; i++) {
+			int x = ((int) ((Math.random() * 10) % largura - 1) + 1);
+			int y = ((int) ((Math.random() * 10) % altura - 1) + 1);
 			while (ambiente[x][y].estado == EstadoDaSala.sujo
 					|| ambiente[x][y].estado == EstadoDaSala.obstaculo) {
-				x = (int) (Math.random() * altura - 1) + 1;
-				y = (int) (Math.random() * largura - 1) + 1;
+				x = ((int) ((Math.random() * 10) % largura - 1) + 1);
+				y = ((int) ((Math.random() * 10) % altura - 1) + 1);
 			}
 			ambiente[x][y].estado = EstadoDaSala.sujo;
 		}
+	}
+
+	private int getTotalDeObstaculos() {
+		int totalDeObstaculos = 0;
+		for (int i = 1; i < largura - 1; i++) {
+			for (int j = 1; j < altura - 1; j++) {
+				if (ambiente[i][j].estado == EstadoDaSala.obstaculo)
+					totalDeObstaculos += 1;
+			}
+		}
+		return totalDeObstaculos;
 	}
 }

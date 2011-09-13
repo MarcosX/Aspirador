@@ -1,19 +1,55 @@
 package br.intcomp.aspirador;
 
-import br.intcomp.aspirador.Sala.EstadoDaSala;
-
 public class Aspirador {
+
+	private int posX, posY;
+
+	private int velX, velY;
+	private int pontuacao;
+
+	SensorSala sensorSujeira;
+	SensorSala sensorProximaSalaLivre;
 
 	public enum Direcao {
 		cima, baixo, esquerda, direita
 	}
 
-	private int velX, velY;
-	private int pontuacao;
-
 	public Aspirador() {
 		velX = 0;
 		velY = 0;
+		posX = 1;
+		posY = 1;
+		sensorProximaSalaLivre = new SensorProximaSalaLivre(this);
+		sensorSujeira = new SensorSujeira(this);
+	}
+
+	public void setPosicao(int x, int y) {
+		posX = x;
+		posY = y;
+	}
+
+	public int getPosicaoX() {
+		return posX;
+	}
+
+	public int getPosicaoY() {
+		return posY;
+	}
+
+	public int getProximaPosicaoX() {
+		return posX + velX;
+	}
+
+	public int getProximaPosicaoY() {
+		return posY + velY;
+	}
+
+	public int getVelX() {
+		return velX;
+	}
+
+	public int getVelY() {
+		return velY;
 	}
 
 	public void setDirecao(Direcao d) {
@@ -39,25 +75,13 @@ public class Aspirador {
 		}
 	}
 
-	public int getVelX() {
-		return velX;
+	public void atuadorMovimento() {
+		posX += velX;
+		posY += velY;
+		pontuacao--;
 	}
 
-	public int getVelY() {
-		return velY;
-	}
-
-	public void perceberSala(Sala sala) {
-		if (sala.estado == EstadoDaSala.sujo) {
-			sala.estado = EstadoDaSala.limpo;
-			pontuacao++;
-		} else {
-			direcaoRandom();
-			pontuacao--;
-		}
-	}
-
-	private void direcaoRandom() {
+	void direcaoRandom() {
 		switch (((int) (Math.random() * 10)) % 4) {
 		case 0:
 			setDirecao(Direcao.cima);
@@ -76,13 +100,11 @@ public class Aspirador {
 		}
 	}
 
-	public void perceberObstaculoSala(Sala sala) {
-		velX = -velX;
-		velY = -velY;
-	}
-
 	public int getPontuacao() {
 		return pontuacao;
 	}
 
+	public void aumentarPontuacao() {
+		pontuacao++;
+	}
 }
