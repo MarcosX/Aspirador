@@ -5,7 +5,8 @@ import br.intcomp.aspirador.Sala.EstadoDaSala;
 public class Ambiente {
 	private int altura, largura;
 	private Sala[][] ambiente;
-	private Aspirador agente;
+	private AspiradorRandom agenteRandom;
+	private AspiradorEstadoInterno agenteEstadoInterno;
 	private int totalSujeiras;
 
 	public Ambiente(int largura, int altura) {
@@ -20,7 +21,8 @@ public class Ambiente {
 					ambiente[i][j] = new Sala();
 			}
 		}
-		agente = new Aspirador();
+		agenteRandom = new AspiradorRandom();
+		agenteEstadoInterno = new AspiradorEstadoInterno();
 	}
 
 	public Sala getSala(int x, int y) {
@@ -34,8 +36,12 @@ public class Ambiente {
 	public void mostrarAmbiente() {
 		for (int j = 0; j < altura; j++) {
 			for (int i = 0; i < largura; i++) {
-				if (i == agente.getPosicaoX() && j == agente.getPosicaoY()) {
-					System.out.print('@');
+				if (i == agenteRandom.getPosicaoX()
+						&& j == agenteRandom.getPosicaoY()) {
+					System.out.print('R');
+				} else if (i == agenteEstadoInterno.getPosicaoX()
+						&& j == agenteEstadoInterno.getPosicaoY()) {
+					System.out.print('E');
 				} else {
 					System.out.print(ambiente[i][j].getDscSala());
 				}
@@ -59,27 +65,52 @@ public class Ambiente {
 				&& ambiente[x][y].estado != EstadoDaSala.obstaculo;
 	}
 
-	public void executarAgente() {
-		if (agente.sensorSujeira.acionarSensor(getSalaAtual())) {
-		} else {
-			while (agente.sensorProximaSalaLivre
-					.acionarSensor(getProximaSala())) {
+	public void executarAgenteRandom() {
+		if (!agenteRandom.sensorSujeira.acionarSensor(getSalaAtualRandom())) {
+			while (agenteRandom.sensorProximaSalaOcupada
+					.acionarSensor(getProximaSalaRandom())) {
+				agenteRandom.direcaoRandom();
 			}
-			agente.atuadorMovimento();
+			agenteRandom.atuadorMovimento();
+		}
+		agenteRandom.direcaoRandom();
+	}
+
+	public void executarAgenteEstadoInterno() {
+		if (!agenteEstadoInterno.sensorSujeira.acionarSensor(getSalaAtualEI())) {
+			boolean isProximaSalaOcupada = agenteEstadoInterno.sensorProximaSalaOcupada
+					.acionarSensor(getProximaSalaEI());
+			boolean isProximaSalaVisitada = agenteEstadoInterno.isSalaVisitada(
+					agenteEstadoInterno.getProximaPosicaoX(),
+					agenteEstadoInterno.getProximaPosicaoY());
+			if (isProximaSalaOcupada || isProximaSalaVisitada) {
+				agenteEstadoInterno.girarNoventaGraus();
+			}
+			agenteEstadoInterno.atuadorMovimento();
 		}
 	}
 
-	private Sala getProximaSala() {
-		return ambiente[agente.getProximaPosicaoX()][agente
+	private Sala getSalaAtualEI() {
+		return ambiente[agenteEstadoInterno.getPosicaoX()][agenteEstadoInterno
+				.getPosicaoY()];
+	}
+
+	private Sala getProximaSalaEI() {
+		return ambiente[agenteEstadoInterno.getProximaPosicaoX()][agenteEstadoInterno
 				.getProximaPosicaoY()];
 	}
 
-	private Sala getSalaAtual() {
-		return ambiente[agente.getPosicaoX()][agente.getPosicaoY()];
+	private Sala getProximaSalaRandom() {
+		return ambiente[agenteRandom.getProximaPosicaoX()][agenteRandom
+				.getProximaPosicaoY()];
+	}
+
+	private Sala getSalaAtualRandom() {
+		return ambiente[agenteRandom.getPosicaoX()][agenteRandom.getPosicaoY()];
 	}
 
 	public void setPosicaoAgente(int x, int y) {
-		agente.setPosicao(x, y);
+		agenteRandom.setPosicao(x, y);
 	}
 
 	public boolean existeSujeira() {
@@ -95,7 +126,9 @@ public class Ambiente {
 
 	public void mostrarInformacoes() {
 		System.out.println("Sujeira: " + getSujeirasRestantes() + "/"
-				+ totalSujeiras + " Pontuacao: " + agente.getPontuacao());
+				+ totalSujeiras + " Pontuacao Random: "
+				+ agenteRandom.getPontuacao() + " Pontuacao EI: "
+				+ agenteEstadoInterno.getPontuacao());
 	}
 
 	private int getSujeirasRestantes() {

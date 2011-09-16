@@ -2,9 +2,9 @@ package br.intcomp.aspirador;
 
 public abstract class SensorSala {
 
-	Aspirador agente;
+	AspiradorAbstrato agente;
 
-	public SensorSala(Aspirador a) {
+	public SensorSala(AspiradorAbstrato a) {
 		agente = a;
 	}
 
