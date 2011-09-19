@@ -1,5 +1,8 @@
 Agente inteligente Aspirador de Pó
 
+Versão 0.2
+	- Incluído agente com estado interno
+
 Versão 0.1
 	- Rodando em memória
 	- Rodando modo texto
