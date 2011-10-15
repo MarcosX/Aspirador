@@ -8,7 +8,7 @@ public class Main {
 //		fabrica.criarAmbienteAgenteRandom(0.5);
 //		fabrica.criarAmbienteAgenteEstadoInterno(0.5);
 		
-		AmbienteGraficoFactory fabrica = new AmbienteGraficoFactory(5, 7);
+		AmbienteGraficoFactory fabrica = new AmbienteGraficoFactory(3, 3);
 		fabrica.criarAmbienteAgenteEstadoInterno(0.7);
 	}
 }

@@ -1,6 +1,9 @@
 package br.intcomp.main;
 
-import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,42 +13,68 @@ import javax.swing.JOptionPane;
 public class AmbienteJInternalFrame extends JFrame implements AmbienteWindow {
 
 	protected int largura, altura;
-	protected Container container;
-	protected JLabel[] labelAmbiente;
+	protected Image imgParede;
+	protected Image imgPoeira;
+	protected Image imgAspirador;
+	protected Image imgChao;
+	protected String[] linhasAmbiente;
+	private String info;
 
 	public AmbienteJInternalFrame(int largura, int altura) {
 		super();
 		this.largura = largura;
 		this.altura = altura;
-		labelAmbiente = new JLabel[largura + 2];
 
-		setLocationRelativeTo(null);
+		imgParede = Toolkit.getDefaultToolkit().getImage("./rsc/parede.png");
+		imgPoeira = Toolkit.getDefaultToolkit().getImage("./rsc/poeira.png");
+		imgAspirador = Toolkit.getDefaultToolkit().getImage(
+				"./rsc/aspirador.png");
+		imgChao = Toolkit.getDefaultToolkit().getImage("./rsc/chao.jpg");
+
 		setLayout(null);
-		container = getContentPane();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(200 + (altura + 2) * 10, 100 + (largura + 2) * 10);
+		setSize((largura + 2) * 50 + 5, (altura + 2) * 50 + 80);
 		setVisible(true);
 	}
 
 	@Override
 	public void desenharAmbiente(String dscAmbiente) {
-		String[] linhasAmbiente = dscAmbiente.split("\n");
+		linhasAmbiente = dscAmbiente.split("\n");
+		repaint();
+	}
 
-		container.removeAll();
+	public void paint(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
 		for (int i = 0; i < linhasAmbiente.length; i++) {
-			labelAmbiente[i] = new JLabel(linhasAmbiente[i]);
-			labelAmbiente[i].setBounds(30, -170 + i * 10, 400, 400);
-			container.add(labelAmbiente[i]);
+			char[] coluna = linhasAmbiente[i].toCharArray();
+			for (int j = 0; j < coluna.length; j++) {
+				switch (coluna[j]) {
+				case '$':
+					g2.drawImage(imgAspirador, i * 50, j * 50 + 75, this);
+					break;
+				case '-':
+					g2.drawImage(imgChao, i * 50, j * 50 + 75, this);
+					break;
+				case 'X':
+					g2.drawImage(imgPoeira, i * 50, j * 50 + 75, this);
+					break;
+				case '#':
+					g2.drawImage(imgParede, i * 50, j * 50 + 75, this);
+					break;
+				default:
+					break;
+				}
+			}
 		}
-		container.repaint();
+		g2.clearRect(10, -10, 200, 50);
+		g2.drawString(info, 10, 40);
+		g2.finalize();
 	}
 
 	@Override
 	public void mostrarInformações(String info) {
-		JLabel informacoes = new JLabel(info);
-		informacoes.setBounds(5, -190, 300, 400);
-		container.add(informacoes);
-		container.repaint();
+		this.info = info;
+		repaint();
 	}
 
 	@Override
