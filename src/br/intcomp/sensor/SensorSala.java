@@ -1,15 +1,15 @@
 package br.intcomp.sensor;
 
-import br.intcomp.agente.AspiradorAbstrato;
 import br.intcomp.ambiente.Sala;
 
-public abstract class SensorSala {
-
-	AspiradorAbstrato agente;
-
-	public SensorSala(AspiradorAbstrato a) {
-		agente = a;
-	}
-
-	public abstract boolean acionarSensor(Sala sala);
+/**
+ * Define uma interface comum para todos os sensores que percebem uma sala.
+ * Utiliza apenas o método para acionar um sensor, dado uma sala. O método
+ * retorna um booleano para indicar se o sensor foi ativado ou não.
+ * 
+ * @author marcos
+ * 
+ */
+public interface SensorSala {
+	boolean acionarSensor(Sala sala);
 }

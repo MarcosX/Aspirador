@@ -1,20 +1,22 @@
 package br.intcomp.sensor;
 
-import br.intcomp.agente.AspiradorAbstrato;
 import br.intcomp.ambiente.Sala;
 import br.intcomp.enums.EstadoDaSala;
 
-public class SensorSujeira extends SensorSala {
+/**
+ * Este sensor verifica, dado uma sala, se ela está suja ou não. Caso esteja
+ * suja, executa sua limpeza.
+ * 
+ * @author marcos
+ * 
+ */
 
-	public SensorSujeira(AspiradorAbstrato a) {
-		super(a);
-	}
+public class SensorSujeira implements SensorSala {
 
 	@Override
 	public boolean acionarSensor(Sala sala) {
 		if (sala.estado == EstadoDaSala.sujo) {
 			sala.estado = EstadoDaSala.limpo;
-			agente.aumentarPontuacao();
 			return true;
 		}
 		return false;

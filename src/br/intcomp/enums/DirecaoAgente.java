@@ -1,5 +1,5 @@
 package br.intcomp.enums;
 
-public enum Direcao {
+public enum DirecaoAgente {
 	baixo, direita, cima, esquerda
 }

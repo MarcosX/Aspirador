@@ -2,6 +2,13 @@ package br.intcomp.ambiente;
 
 import br.intcomp.enums.EstadoDaSala;
 
+/**
+ * Define a estrutura de dados de uma sala. Guarda a informação de estado da
+ * sala, seguindo a enumeração {@link EstadoDaSala}
+ * 
+ * @author marcos
+ * 
+ */
 public class Sala {
 	public EstadoDaSala estado;
 
@@ -16,13 +23,13 @@ public class Sala {
 	public char getDscSala() {
 		switch (estado) {
 		case limpo:
-			return '.';
+			return '-';
 		case sujo:
-			return 'x';
+			return 'X';
 		case obstaculo:
-			return 'O';
+			return '#';
 		default:
-			return 'E';
+			return ' ';
 		}
 	}
 }

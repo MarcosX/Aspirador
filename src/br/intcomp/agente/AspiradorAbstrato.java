@@ -1,13 +1,22 @@
 package br.intcomp.agente;
 
-import br.intcomp.enums.Direcao;
+import br.intcomp.enums.DirecaoAgente;
 import br.intcomp.sensor.SensorSala;
 
+/**
+ * Define o comportamento genérico de um agente. Todo agente possui o
+ * conhecimento de sua posicao e de sua velocidade nos dois eixos, que definem a
+ * direção de seu movimento. Além disso todo agente possui um sensor de sujeira,
+ * que verifica se a sala atual está suja, e um sensor que verifica se a próxima
+ * sala está ocupada (por um obstáculo).
+ * 
+ * O atuador de movimento do agente só será definido nas subclasses.
+ * 
+ */
 public abstract class AspiradorAbstrato {
 
 	protected int posX, posY;
 	protected int velX, velY;
-	protected int pontuacao;
 
 	public SensorSala sensorSujeira;
 	public SensorSala sensorProximaSalaOcupada;
@@ -41,7 +50,7 @@ public abstract class AspiradorAbstrato {
 		return velY;
 	}
 
-	public void setDirecao(Direcao d) {
+	public void setDirecao(DirecaoAgente d) {
 		switch (d) {
 		case cima:
 			velX = 0;
@@ -65,12 +74,4 @@ public abstract class AspiradorAbstrato {
 	}
 
 	public abstract void atuadorMovimento();
-
-	public int getPontuacao() {
-		return pontuacao;
-	}
-
-	public void aumentarPontuacao() {
-		pontuacao++;
-	}
 }
