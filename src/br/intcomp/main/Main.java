@@ -3,12 +3,6 @@ package br.intcomp.main;
 public class Main {
 
 	public static void main(String[] args) {
-//		AmbienteTesteFactory fabrica = new AmbienteTesteFactory(10, 30);
-//		fabrica.setQtdIteracoes(100);
-//		fabrica.criarAmbienteAgenteRandom(0.5);
-//		fabrica.criarAmbienteAgenteEstadoInterno(0.5);
-		
-		AmbienteGraficoFactory fabrica = new AmbienteGraficoFactory(3, 3);
-		fabrica.criarAmbienteAgenteEstadoInterno(0.7);
+		ConfigurarPrograma configurarPrograma = new ConfigurarPrograma(args);
 	}
 }

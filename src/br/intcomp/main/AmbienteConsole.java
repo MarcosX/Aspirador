@@ -8,7 +8,7 @@ public class AmbienteConsole implements AmbienteWindow {
 	}
 
 	@Override
-	public void mostrarInformações(String info) {
+	public void mostrarInformacoes(String info) {
 		System.out.println(info);
 	}
 

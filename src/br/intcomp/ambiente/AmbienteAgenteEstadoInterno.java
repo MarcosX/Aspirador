@@ -38,7 +38,8 @@ public class AmbienteAgenteEstadoInterno extends AmbienteGenerico {
 		return dscAmbiente;
 	}
 
-	public void executarAgenteEstadoInterno() {
+	@Override
+	public void executarAgente() {
 		if (agenteEstadoInterno.sensorSujeira.acionarSensor(getSalaAtualEI())) {
 			pontuacaoAgenteEI++;
 		} else {

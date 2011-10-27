@@ -7,13 +7,14 @@ package br.intcomp.ambiente;
  * 
  */
 
-public class AmbienteAgenteRandomComPenalizacao extends AmbienteAgenteRandom {
+public class AmbienteAgenteAcaoReacaoComPenalizacao extends AmbienteAgenteAcaoReacao {
 
-	public AmbienteAgenteRandomComPenalizacao(int largura, int altura) {
+	public AmbienteAgenteAcaoReacaoComPenalizacao(int largura, int altura) {
 		super(largura, altura);
 	}
 
-	public void executarAgenteRandom() {
+	@Override
+	public void executarAgente() {
 		if (agenteRandom.sensorSujeira.acionarSensor(getSalaAtualRandom())) {
 			pontuacaoAgenteRandom++;
 		} else {

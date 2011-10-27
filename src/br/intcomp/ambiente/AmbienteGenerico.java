@@ -98,4 +98,6 @@ public abstract class AmbienteGenerico {
 	public abstract String mostrarInformacoes();
 
 	public abstract String mostrarRelatorioFinal();
+
+	public abstract void executarAgente();
 }

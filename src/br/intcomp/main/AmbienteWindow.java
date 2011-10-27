@@ -4,7 +4,7 @@ public interface AmbienteWindow {
 
 	void desenharAmbiente(String dscAmbiente);
 
-	void mostrarInformações(String info);
+	void mostrarInformacoes(String info);
 
 	void mostrarRelatorioFinal(String relatorio);
 }
