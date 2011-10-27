@@ -1,5 +1,12 @@
 Agente inteligente Aspirador de Pó
 
+Versão 1.0
+	- Agentes Ação-Reação e com Estado Interno
+	- Ambientes com e sem penalização para os dois agentes
+	- Execução do ambiente para testes de desempenho dos agentes e para interação com o usuário
+	- Interface com usuário via terminal
+	- Configuração por parâmetros de chamada do programa ou interativamente
+
 Versão 0.2
 	- Incluído agente com estado interno
 

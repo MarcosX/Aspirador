@@ -10,13 +10,14 @@ public class ConfigurarPrograma {
 	protected int largura;
 	protected int altura;
 	protected boolean ehTeste;
+	private double porcentagemDeSujeira;
 
 	public ConfigurarPrograma(String[] args) {
 		if (args.length == 1) {
 			exibirInformacoes(args);
 		} else if (args.length == 0) {
 			configurar();
-		} else if (args.length == 5) {
+		} else if (args.length == 6) {
 			configurar(args);
 		} else {
 			exibirComandos();
@@ -38,20 +39,28 @@ public class ConfigurarPrograma {
 		System.out
 				.println("Utilize [-versao | -v] para exibir a versão do programa");
 		System.out
-				.println("Utilize os seguintes comandos para configurar o ambiente:");
+				.println("Utilize os seguintes comandos para configurar o ambiente");
+		System.out.println("Escolher o tipo de agente:");
 		System.out
 				.println("[-estadointerno | -ei] Ambiente com agente de estado interno");
 		System.out
 				.println("[-acaoreacao | -ar] Ambiente com agente de ação e reação");
-		System.out.println();
+		System.out
+				.println("Escolher se deve ser um ambiente de testes ou iterativo");
 		System.out.println("[-teste | -t] Ambiente com teste");
 		System.out.println("[-iterativo | -i] Ambiente iterativo");
-		System.out.println();
+		System.out
+				.println("Escolher se o ambiente deve ou não penalizar seus agentes");
 		System.out.println("[-compenalizacao | -cp] Ambiente com penalização");
 		System.out.println("[-sempenalizacao | -sp] Ambiente sem penalização");
-		System.out.println();
-		System.out.println("Largura do ambiente");
-		System.out.println("Altura do ambiente");
+		System.out.println("Escolher as dimensões do ambiente");
+		System.out.println("Largura do ambiente e Altura do Ambiente");
+		System.out.println("Escolher porcentagem de sujeira no ambiente");
+		System.out.println("Porcentagem de sujeira");
+		System.out.println("\nExemplo de uso:");
+		System.out.println("Aspirador de pó.jar -ei -i -sp 10 10 0.5");
+		System.out
+				.println("Cria um ambiente com um agente de estado interno, iterativo, sem penalização, com dimensão 10x10 e com 50% de sujeira");
 		System.exit(1);
 	}
 
@@ -88,6 +97,7 @@ public class ConfigurarPrograma {
 
 		largura = Integer.parseInt(args[3]);
 		altura = Integer.parseInt(args[4]);
+		porcentagemDeSujeira = Double.parseDouble(args[5]);
 
 	}
 
@@ -141,6 +151,9 @@ public class ConfigurarPrograma {
 
 		System.out.print("Altura do Ambiente: ");
 		altura = scanner.nextInt();
+
+		System.out.print("Porcentagem de sujeira: ");
+		porcentagemDeSujeira = scanner.nextDouble();
 	}
 
 	public String getTipoDeAgente() {
@@ -161,6 +174,10 @@ public class ConfigurarPrograma {
 
 	public boolean isEhTeste() {
 		return ehTeste;
+	}
+
+	public double getPorcentagemDeSujeira() {
+		return porcentagemDeSujeira;
 	}
 
 }
